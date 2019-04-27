@@ -1,3 +1,4 @@
+mod chatters;
 mod dispatcher;
 
 fn main() {

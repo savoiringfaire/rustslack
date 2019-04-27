@@ -1,33 +1,29 @@
-extern crate slack;
-
 use std::time;
 
-pub trait Chatter {
-    fn send_message(&self, _: String, _: String);
-}
+use super::chatters;
 
 pub trait Handler {
     fn handle(&mut self, _: &Event);
 }
 
 pub struct Dispatcher<'a> {
-    handlers: Vec<&'a mut Handler>
+    handlers: Vec<&'a mut Handler>,
 }
 
 enum Event<'a> {
     TimerDone {
-        identifier: String
+        identifier: String,
     },
     Message {
-        service: &'a Chatter,
+        service: &'a chatters::Chatter,
         user: String,
-        message: String
-    }
+        message: String,
+    },
 }
 
 pub fn build_dispatcher<'a>() -> Dispatcher<'a> {
     Dispatcher {
-        handlers: Vec::new()
+        handlers: Vec::new(),
     }
 }
 
@@ -44,7 +40,7 @@ impl<'a> Dispatcher<'a> {
     }
 
     pub fn handler_count(&self) -> usize {
-        return self.handlers.len()
+        return self.handlers.len();
     }
 }
 
@@ -53,7 +49,7 @@ mod test {
     use super::*;
 
     struct TestHandler {
-        called: bool
+        called: bool,
     }
 
     impl Handler for TestHandler {
@@ -65,9 +61,11 @@ mod test {
     #[test]
     fn function_called_when_event_dispatched() {
         let mut dispatcher = build_dispatcher();
-        let mut handler = TestHandler{called: false};
+        let mut handler = TestHandler { called: false };
         dispatcher.register_handler(&mut handler);
-        dispatcher.dispatch(&Event::TimerDone{identifier: "test".to_string()});
+        dispatcher.dispatch(&Event::TimerDone {
+            identifier: "test".to_string(),
+        });
         assert!(handler.called);
     }
 
@@ -75,7 +73,7 @@ mod test {
     fn count_of_handlers_increases_after_register() {
         let mut dispatcher = build_dispatcher();
         assert!(dispatcher.handler_count() == 0);
-        let mut handler = TestHandler{called: false};
+        let mut handler = TestHandler { called: false };
         dispatcher.register_handler(&mut handler);
         assert!(dispatcher.handler_count() == 1);
     }
