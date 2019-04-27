@@ -1,0 +1,8 @@
+[package]
+name = "rustslack"
+version = "0.1.0"
+authors = ["Marcus <marcus@microserve.io>"]
+edition = "2018"
+
+[dependencies]
+slack = "0.22.0"
