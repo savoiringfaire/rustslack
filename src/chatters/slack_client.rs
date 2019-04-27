@@ -42,8 +42,8 @@ impl EventHandler for Slack {
 impl chatters::Chatter for Slack {
     fn send_message(&self, channel: String, message: String) {}
     fn listen(&mut self) {
-        let api_key: &mut String = &mut self.api_key;
-        let r = RtmClient::login_and_run(api_key, self);
+        let api_key: String = self.api_key.clone();
+        let r = RtmClient::login_and_run(&api_key, self);
         match r {
             Ok(_) => {}
             Err(err) => panic!("Error: {}", err),
